@@ -1,4 +1,4 @@
-# go-trie
+# go-trie (WORK IN PROGRESS)
 
 A pure-Go implementation of a Trie data structure for strings.
 
