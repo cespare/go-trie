@@ -20,3 +20,8 @@ func (s *TrieTestSuite) TestAddingWordsToTrie(c *C) {
 	/*c.Check(t.Contains("barter"), Equals, true)*/
 	/*c.Check(t.Contains("barn"), Equals, false)*/
 }
+
+// Corner cases:
+// * Random UTF-8 strings
+// * UTF-8 strings with the NUL (0) code point in them (*not handled by libdatrie)
+// * Should be able to walk based on a rune (int)
