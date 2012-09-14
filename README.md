@@ -30,6 +30,8 @@ Caleb Spare ([cespare](https://github.com/cespare))
 ## To Do
 
 * Finish a working implementation!
+* The trie.Retrieve method(s) don't need to do a node-by-node walk -- they can do a more efficient search by
+	doing a direct byte-by-byte comparison as soon as we get to the tail.
 * Reading/writing from disk
 
 ## License
