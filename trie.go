@@ -17,9 +17,44 @@ func (t *Trie) Root() *Node {
 	return newNode(t)
 }
 
-// Add a []byte to a trie. The return value indicates whether the []byte was already in the trie.
+// Add a []byte to a trie. The return value indicates whether s was added to the trie-- it is true if s was
+// not already present; false otherwise.
 func (t *Trie) Add(s []byte) bool {
-	return false
+	// Start at the root
+	current := newNode(t)
+	endOfString := true
+	for _, ch := range s {
+		if !current.Walk(ch) {
+			endOfString = false
+			break
+		}
+	}
+
+	if endOfString {
+		// We walked existing trie nodes all the way to the end of s.
+		if n.Terminal() {
+			// s already exists in t.
+			return false
+		}
+		// s is a prefix of another element of t.
+		if n.inTail {
+			// Need to move common nodes into the double array.
+			panic("tail splitting unimplemented.")
+		} else {
+			// Just need to add a trivial tail ending.
+			panic("\0 tail insertion unimplemented.")
+		}
+		panic("unreached")
+	}
+
+	// We reached the end of existing trie nodes before traversing s completely.
+	if inTail {
+		// Need to move the current tail entirely into the double array and put the remainder of s in a new tail.
+		panic("tail splitting (2) unimplemented.")
+	} else {
+		//
+	}
+	panic("unreached")
 }
 
 // Remove a []byte from the trie. Returns true if the []byte was removed; returns false if the []byte is not
