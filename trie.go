@@ -52,7 +52,7 @@ func (t *Trie) Add(s []byte) bool {
 		// Need to move the current tail entirely into the double array and put the remainder of s in a new tail.
 		panic("tail splitting (2) unimplemented.")
 	} else {
-		//
+		// 
 	}
 	panic("unreached")
 }
