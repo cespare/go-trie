@@ -129,7 +129,7 @@ func (n *Node) Copy() *Node {
 	return newNode
 }
 
-// TODO: I removes the below APIs because the user can easily track the state herself and it doesn't
+// TODO: I removed the below APIs because the user can easily track the state herself and it doesn't
 // make sense to force everyone to have the overhead of doing it. Need to decide whether that was the right
 // way to go.
 

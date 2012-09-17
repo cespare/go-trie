@@ -17,7 +17,7 @@ func (t *Trie) Root() *Node {
 	return newNode(t)
 }
 
-// Add a []byte to a trie. The return value indicates whether s was added to the trie-- it is true if s was
+// Add a []byte to a trie. The return value indicates whether s was added to the trie -- it is true if s was
 // not already present; false otherwise.
 func (t *Trie) Add(s []byte) bool {
 	// Start at the root
@@ -52,7 +52,7 @@ func (t *Trie) Add(s []byte) bool {
 		// Need to move the current tail entirely into the double array and put the remainder of s in a new tail.
 		panic("tail splitting (2) unimplemented.")
 	} else {
-		// 
+		// Need to insert a new double array node, relocating other bases as necessary.
 	}
 	panic("unreached")
 }
