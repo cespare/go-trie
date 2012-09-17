@@ -62,6 +62,13 @@ for free list pointers to indicate the first and last free indices in the double
 
 The various procedures for inserting, retrieving, and deleting keys are described in the linked materials.
 
+Although keys in go-trie are not null-terminated in general, there needs to be a way of indicating terminal
+keys inside the double array. Therefore a null byte is used for this purpose in the double array (but not the
+tail). For example, suppose that the only two keys in the trie are `artist` and `art`. Then the double array
+would have entries for `a -> r -> t`. The two transitions from the `t` node would be reprented by `i` and `\0`
+edges from the index indicated by `base[t]`. The tail entry for `\0` would be have a zero-length `[]byte`
+entry, while the tail entry for `i` would have the byte array `st`.
+
 ### Tail
 
 The tail is represented as an array of `tailBlock` structs. Each of these contains a `[]byte` (the suffix) and
