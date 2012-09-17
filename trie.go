@@ -78,3 +78,8 @@ func (t *Trie) Contains(s []byte) bool {
 func (t *Trie) ChildrenWithPrefix(prefix []byte) [][]byte {
 	return [][]byte{}
 }
+
+// Get every key in the trie.
+func (t *Trie) Keys() [][]byte {
+	return [][]byte{}
+}
