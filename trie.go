@@ -42,7 +42,7 @@ func (t *Trie) Add(s []byte) bool {
 			panic("tail splitting unimplemented.")
 		} else {
 			// Just need to add a trivial tail ending.
-			panic("\0 tail insertion unimplemented.")
+			panic("empty tail insertion unimplemented.")
 		}
 		panic("unreached")
 	}

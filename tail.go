@@ -15,11 +15,7 @@ type tailBlockList struct {
 	firstFreeIndex int
 }
 
-// Check whether a position is the end of a key. A non-empty tail ends with a terminating \0 byte.
+// Check whether a position is the end of a key.
 func (tb *tailBlock) terminal(int s) {
-	if len(tb.tail) == 0 {
-		return s == 0
-	}
-	// Not strictly necessary to verify that tail[s+1] == 0, but a good sanity check.
-	return s+2 == len(tb.tail) && tb.tail[s+1] == '\0'
+	return s == len(tb.tail)-1
 }
