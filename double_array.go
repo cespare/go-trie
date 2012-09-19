@@ -15,7 +15,7 @@ const daRootIndex = 1
 // Translate a raw input byte to an index into the double array. The index cannot be 0. We're not using alpha
 // maps as libdatrie does (for now), so the quick solution is to map 0 -> 256 and 1-255 map to themselves.
 func byteToDAIndex(b byte) int {
-	if b == '\0' {
+	if b == '\x00' {
 		return 256
 	}
 	return int(b)
@@ -31,12 +31,12 @@ type doubleArray struct {
 }
 
 func newDoubleArray() *doubleArray {
-	cells = &[]doubleArrayCell{doubleArrayCell{-1, -1}, doubleArrayCell{daRootIndex, 0}}
+	cells := []doubleArrayCell{doubleArrayCell{-1, -1}, doubleArrayCell{daRootIndex, 0}}
 	return &doubleArray{cells}
 }
 
 // Get the value of BASE at some index i.
-func (da *doubleArray) base(i int) (int32, bool) { return da.cells[i].base }
+func (da *doubleArray) base(i int) int32 { return da.cells[i].base }
 
 // Get the value of CHECK at some index i.
 func (da *doubleArray) check(i int) int32 { return da.cells[i].check }
@@ -47,20 +47,22 @@ func (da *doubleArray) check(i int) int32 { return da.cells[i].check }
 // not possible (either s is invalid or there is no such child) then ok is false. next and inTail should be
 // ignored unless ok == true.
 func (da *doubleArray) walk(s int, ch int) (next int, inTail, ok bool) {
-	if s >= len(n.da.cells) || s < daRootIndex {
+	if s >= len(da.cells) || s < daRootIndex {
 		return 0, false, false
 	}
-	sContents = da.base(s)
+	sContents := da.base(s)
 	if sContents < 0 {
 		// A tail pointer
-		return -sContents, true, true
+		return int(-sContents), true, true
 	}
-	next = sContents + ch
-	if next >= len(n.da.cells) || next < daRootIndex {
+	next = int(sContents) + ch
+	if next >= len(da.cells) || next < daRootIndex {
 		return 0, false, false
 	}
-	if da.check(next) == s {
+	if int(da.check(next)) == s {
 		return next, false, true
 	}
 	return 0, false, false
 }
+
+/*func (da *doubleArray) addBase(s int, ch int*/

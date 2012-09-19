@@ -1,6 +1,10 @@
 // The trie package implements a trie (prefix tree) data structure over byte slices.
 package trie
 
+import (
+	"fmt"
+)
+
 // The core trie data structure.
 type Trie struct {
 	da *doubleArray
@@ -9,7 +13,7 @@ type Trie struct {
 
 // Construct a new, empty trie.
 func New() *Trie {
-	return &Trie{new(doubleArray), new(tailBlockList)}
+	return &Trie{newDoubleArray(), newTailBlockList()}
 }
 
 // Return the Node at the root of the trie.
@@ -32,12 +36,12 @@ func (t *Trie) Add(s []byte) bool {
 
 	if endOfString {
 		// We walked existing trie nodes all the way to the end of s.
-		if n.Terminal() {
+		if current.Terminal() {
 			// s already exists in t.
 			return false
 		}
 		// s is a prefix of another element of t.
-		if n.inTail {
+		if current.inTail {
 			// Need to move common nodes into the double array.
 			panic("tail splitting unimplemented.")
 		} else {
@@ -48,7 +52,7 @@ func (t *Trie) Add(s []byte) bool {
 	}
 
 	// We reached the end of existing trie nodes before traversing s completely.
-	if inTail {
+	if current.inTail {
 		// Need to move the current tail entirely into the double array and put the remainder of s in a new tail.
 		panic("tail splitting (2) unimplemented.")
 	} else {
@@ -67,7 +71,7 @@ func (t *Trie) Delete(s []byte) bool {
 // Test whether a []byte is present in the trie.
 func (t *Trie) Contains(s []byte) bool {
 	current := t.Root()
-	for _, b := s {
+	for _, b := range s {
 		if !current.Walk(b) {
 			return false
 		}
@@ -83,4 +87,30 @@ func (t *Trie) ChildrenWithPrefix(prefix []byte) [][]byte {
 // Get every key in the trie.
 func (t *Trie) Keys() [][]byte {
 	return [][]byte{}
+}
+
+// Print debugging info.
+func (t *Trie) Print() {
+	fmt.Println("Double array:\n")
+	fmt.Printf("            BASE        CHECK\n")
+	for i, cell := range t.da.cells {
+		fmt.Printf("%8d [%8d]  [%8d]\n", i, cell.base, cell.check)
+	}
+
+	fmt.Println("\nTail:\n")
+	fmt.Printf("firstFreeIndex -> %d\n", t.tail.firstFreeIndex)
+	nextFree := t.tail.firstFreeIndex
+	for i, tb := range t.tail.tailBlocks {
+		fmt.Printf("%8d ", i)
+		if nextFree == i {
+			fmt.Printf("(free) -> %d\n", i, tb.nextFreeIndex)
+			nextFree = tb.nextFreeIndex
+		} else {
+			fmt.Printf("[ ")
+			for _, b := range tb.tail {
+				fmt.Printf("%c ", b)
+			}
+			fmt.Printf("]\n")
+		}
+	}
 }

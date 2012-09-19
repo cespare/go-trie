@@ -5,7 +5,7 @@ package trie
 // there are no subsequent free tailBlocks.
 type tailBlock struct {
 	tail []byte
-	// value interface{}
+	value interface{}
 	nextFreeIndex int
 }
 
@@ -15,7 +15,11 @@ type tailBlockList struct {
 	firstFreeIndex int
 }
 
+func newTailBlockList() *tailBlockList {
+	return &tailBlockList{[]tailBlock{}, 0}
+}
+
 // Check whether a position is the end of a key.
-func (tb *tailBlock) terminal(int s) {
+func (tb *tailBlock) terminal(s int) bool {
 	return s == len(tb.tail)-1
 }

@@ -1,5 +1,7 @@
 package trie
 
+var emptyTailBlock = tailBlock{}
+
 // The Node abstraction is provided to allow for simple walking and inspection of the trie. It represents a
 // single vertex of the logical trie structure.
 type Node struct {
@@ -20,10 +22,7 @@ Private methods
 
 // Construct a new Node at the root of the trie.
 func newNode(t *Trie) *Node {
-	n := &Node{t.da, t.tail}
-	n.inTail = false
-	n.s = daRootIndex
-	return n
+	return &Node{t.da, t.tail, false, emptyTailBlock, daRootIndex}
 }
 
 // Internal version of Walk that accepts a raw transition index (rather than a byte) and doesn't apply any
@@ -34,7 +33,7 @@ func (n *Node) walk(c int) bool {
 			// We're at the end of the tail.
 			return false
 		}
-		if n.tb.tail[n.s+1] == c {
+		if int(n.tb.tail[n.s+1]) == c {
 			// We have a match.
 			n.s++
 			return true
@@ -71,7 +70,7 @@ Public methods
 // Walk down the trie along some edge ch. If there is no such child, the return value is false and the state
 // of the Node is unchanged. Otherwise, the return value is true.
 func (n *Node) Walk(ch byte) bool {
-	n.walk(byteToDAIndex(ch))
+	return n.walk(byteToDAIndex(ch))
 }
 
 // Check whether this node is a leaf of the trie (i.e., there are no children).
@@ -90,7 +89,7 @@ func (n *Node) Leaf() bool {
 	// TODO: Double-check this logic.
 	// TODO: I think that we don't need to check CHECK(1), but I need to double-check this.
 	for i := daRootIndex+1; i < len(n.da.cells); i++ {
-		if n.da.check(i) == n.s {
+		if int(n.da.check(i)) == n.s {
 			return false
 		}
 	}
@@ -104,18 +103,18 @@ func (n *Node) Terminal() bool {
 	}
 	// We're still in the double array. Walk down the \0 branch and see if it ends; either way, restore the node
 	// state afterwards.
-	oldS = n.s
+	oldS := n.s
 	defer func() {
 		n.inTail = false
-		n.tb = nil
+		n.tb = emptyTailBlock
 		n.s = oldS
 	}()
 
-	next, inTail, ok := n.walk(n.s, 0)
+	ok := n.walk(0)
 	if !ok {
 		return false
 	}
-	if inTail {
+	if n.inTail {
 		return len(n.tb.tail) == 0
 	}
 	// All keys end in the tail
