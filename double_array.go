@@ -9,7 +9,8 @@ package trie
 // 2| ...               | ...
 //
 // There are no free slots initially, so the free list pointers are initialized to -1. BASE(1) is the root
-// node, and always points to the next slot of the double array pool.
+// node, and initially points to the next slot of the double array pool (i.e., beyond the end of the initially
+// allocated double array).
 const daRootIndex = 1
 
 // Translate a raw input byte to an index into the double array. The index cannot be 0. We're not using alpha
@@ -31,7 +32,7 @@ type doubleArray struct {
 }
 
 func newDoubleArray() *doubleArray {
-	cells := []doubleArrayCell{doubleArrayCell{-1, -1}, doubleArrayCell{daRootIndex, 0}}
+	cells := []doubleArrayCell{doubleArrayCell{-1, -1}, doubleArrayCell{daRootIndex + 1, 0}}
 	return &doubleArray{cells}
 }
 
