@@ -53,6 +53,7 @@ func (t *Trie) Add(s []byte) bool {
 		panic("tail splitting (2) unimplemented.")
 	} else {
 		// Need to insert a new double array node, relocating other bases as necessary.
+		panic("new node insertion unimplemented.")
 	}
 	panic("unreached")
 }
