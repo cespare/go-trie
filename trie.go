@@ -101,8 +101,10 @@ func (t *Trie) Print() {
 		fmt.Printf("%8d [%8d]  [%8d]", i, cell.base, cell.check)
 		switch i {
 		case 0:
-			fmt.Printf(" (free list pointers)\n")
+			fmt.Printf(" (unused)\n")
 		case 1:
+			fmt.Printf(" (free list pointers)\n")
+		case 2:
 			fmt.Printf(" (root)\n")
 		default:
 			fmt.Printf("\n")

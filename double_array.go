@@ -4,14 +4,18 @@ package trie
 //
 //          BASE                CHECK
 // -+-------------------+-------------------
-// 0| free list pointer | free list pointer
-// 1| 2                 | 0
-// 2| ...               | ...
+// 0| <unused>          | <unused>
+// 1| free list pointer | free list pointer
+// 2| 3                 | 0
+// 3| ...               | ...
 //
-// There are no free slots initially, so the free list pointers are initialized to -1. BASE(1) is the root
-// node, and initially points to the next slot of the double array pool (i.e., beyond the end of the initially
-// allocated double array).
-const daRootIndex = 1
+// There are no free slots initially, so the free list pointers are initialized to -1 (themselves). BASE(2) is
+// the root node, and initially points to the next slot of the double array pool (i.e., beyond the end of the
+// initially allocated double array).
+const (
+	daFreeListIndex = 1
+	daRootIndex     = 2
+)
 
 // Translate a raw input byte to an index into the double array. The index cannot be 0. We're not using alpha
 // maps as libdatrie does (for now), so the quick solution is to map 0 -> 256 and 1-255 map to themselves.
@@ -32,7 +36,11 @@ type doubleArray struct {
 }
 
 func newDoubleArray() *doubleArray {
-	cells := []doubleArrayCell{doubleArrayCell{-1, -1}, doubleArrayCell{daRootIndex + 1, 0}}
+	cells := []doubleArrayCell{
+		doubleArrayCell{0, 0},
+		doubleArrayCell{-1, -1},
+		doubleArrayCell{daRootIndex + 1, 0},
+	}
 	return &doubleArray{cells}
 }
 
@@ -47,9 +55,19 @@ func (da *doubleArray) free(start, end int) bool {
 	if start <= daRootIndex || end > len(da.cells) {
 		return false
 	}
-	previous := -1
+	/*previous := daFreeListIndex*/
+	current := daFreeListIndex
+	firstIteration := true
 	// Walk the free list to find the nearest preceding free node.
-	// WIP
+	for current != daFreeListIndex && !firstIteration {
+		next = -da.check(current)
+		if next >= start {
+			break
+		}
+
+	}
+
+
 }
 
 // A helper to walk to along a trie edge inside the double array. Returns the next index along the edge ch. ch
