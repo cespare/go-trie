@@ -6,5 +6,6 @@ import (
 
 func main() {
 	t := trie.New()
+	t.Add([]byte("hello world!"))
 	t.Print()
 }

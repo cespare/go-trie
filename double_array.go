@@ -42,6 +42,16 @@ func (da *doubleArray) base(i int) int32 { return da.cells[i].base }
 // Get the value of CHECK at some index i.
 func (da *doubleArray) check(i int) int32 { return da.cells[i].check }
 
+// Free all the cells in the range [start, end). Returns ok if successful.
+func (da *doubleArray) free(start, end int) bool {
+	if start <= daRootIndex || end > len(da.cells) {
+		return false
+	}
+	previous := -1
+	// Walk the free list to find the nearest preceding free node.
+	// WIP
+}
+
 // A helper to walk to along a trie edge inside the double array. Returns the next index along the edge ch. ch
 // must be converted using byteToDAIndex first; 0 is reserved for an end-of-string character here. If the DA
 // cell at s points to the tail, then inTail will be true and next is the tailBlockList index. If the walk is
@@ -66,4 +76,11 @@ func (da *doubleArray) walk(s int, ch int) (next int, inTail, ok bool) {
 	return 0, false, false
 }
 
-/*func (da *doubleArray) addBase(s int, ch int*/
+// Adds a new transition from state s along an edge ch, possibly relocating an existing base or expanding the
+// double array. Returns ok unless there was some problem and it failed.
+func (da *doubleArray) addBase(s int, ch int) bool {
+	target := da.check(s)
+	if target >= len(da.cells) {
+		// WIP
+	}
+}

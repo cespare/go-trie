@@ -58,7 +58,9 @@ If a position in the double array is free, then the values of `base` and `check`
 encode (via their negations) a circular doubly-linked list to the other free positions in the double array.
 The value of `check` is the negative index to the next free position; the value of `base` is the negative
 index to the previous free position. The first position (index 0) of the double array are permanently reserved
-for free list pointers to indicate the first and last free indices in the double array.
+for free list pointers to indicate the first and last free indices in the double array. The double array free
+list is always kept in order (that is, each free cell's 'next' index is greater than itself, except at the end
+of the list where it wraps around).
 
 The various procedures for inserting, retrieving, and deleting keys are described in the linked materials.
 

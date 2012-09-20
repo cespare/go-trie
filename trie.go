@@ -27,7 +27,9 @@ func (t *Trie) Add(s []byte) bool {
 	// Start at the root
 	current := newNode(t)
 	endOfString := true
-	for _, ch := range s {
+	var i int
+	var ch byte
+	for i, ch = range s {
 		if !current.Walk(ch) {
 			endOfString = false
 			break
@@ -57,7 +59,9 @@ func (t *Trie) Add(s []byte) bool {
 		panic("tail splitting (2) unimplemented.")
 	} else {
 		// Need to insert a new double array node, relocating other bases as necessary.
-		panic("new node insertion unimplemented.")
+		fmt.Printf("\033[01;34m>>>> i: %v\x1B[m\n", i)
+		t.da.addBase(current.s, byteToDAIndex(ch))
+		panic("blah")
 	}
 	panic("unreached")
 }
